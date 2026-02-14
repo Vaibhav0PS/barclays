@@ -15,8 +15,8 @@ interface SidebarProps {
 
 const Sidebar = ({ activeTab, onTabChange, isCollapsed, onToggle }: SidebarProps) => {
   const navItems = [
-    { id: 'overview', name: 'Dashboard', icon: LayoutDashboard },
-    { id: 'npa-forecast', name: 'Overview', icon: PieIcon },
+    { id: 'overview', name: 'Overview', icon: LayoutDashboard },
+    { id: 'npa-forecast', name: 'NPA Statistics', icon: PieIcon },
     { id: 'portfolio', name: 'Wallet', icon: Wallet },
     { id: 'intervention', name: 'Loans', icon: Activity },
     { id: 'reputation', name: 'Investments', icon: Landmark },

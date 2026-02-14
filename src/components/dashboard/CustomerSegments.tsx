@@ -47,8 +47,8 @@ const CustomerSegments = () => {
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Max Vulnerability</span>
             <span className="text-xs font-black text-slate-900 uppercase tracking-tighter">Manufacturing Sector</span>
          </div>
-         <div className="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest">
-            +12.4% Risk
+         <div className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest">
+            +12.4% Watch
          </div>
       </div>
     </motion.div>

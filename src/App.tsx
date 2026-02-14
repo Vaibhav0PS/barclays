@@ -8,15 +8,31 @@ import PortfolioView from './views/PortfolioView';
 import InterventionView from './views/InterventionView';
 import ReputationView from './views/ReputationView';
 import SettingsView from './views/SettingsView';
+import CustomerProfileView from './views/CustomerProfileView';
+import { RISK_CUSTOMERS } from './data/mockData';
 
 function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
+
+  const selectedCustomer = selectedCustomerId
+    ? RISK_CUSTOMERS.find((c) => c.id === selectedCustomerId) ?? null
+    : null;
+
+  const openCustomerProfile = (customerId: string) => {
+    setSelectedCustomerId(customerId);
+    setActiveTab('customer-profile');
+  };
+
+  const goToOverview = () => {
+    setActiveTab('overview');
+  };
 
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
-        return <DashboardView key="overview" />;
+        return <DashboardView key="overview" onOpenCustomer={openCustomerProfile} />;
       case 'npa-forecast':
         return <ForecastView key="npa-forecast" />;
       case 'portfolio':
@@ -27,6 +43,8 @@ function App() {
         return <ReputationView key="reputation" />;
       case 'settings':
         return <SettingsView key="settings" />;
+      case 'customer-profile':
+        return <CustomerProfileView key="customer-profile" customer={selectedCustomer} onBack={goToOverview} />;
       default:
         return (
           <div className="p-12 h-full flex items-center justify-center text-slate-300 font-black uppercase tracking-[0.3em] text-xs">
@@ -42,7 +60,7 @@ function App() {
     <div className="flex bg-[#f8fafc] min-h-screen text-slate-900 selection:bg-blue-100 selection:text-blue-900">
       <Sidebar 
         activeTab={activeTab} 
-        onTabChange={setActiveTab} 
+        onTabChange={setActiveTab}
         isCollapsed={isSidebarCollapsed}
         onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
