@@ -35,6 +35,37 @@ const CustomerProfileView = ({ customer, onBack }: CustomerProfileViewProps) => 
     { month: 'Sep', balance: 2400 },
   ];
 
+  const stressIndicators = [
+    { label: 'Salary credited later than usual', severity: 'high' },
+    { label: 'Savings balance declining week-over-week', severity: 'high' },
+    { label: 'Increased UPI transfers to lending apps', severity: 'high' },
+    { label: 'Utility payments delayed in billing cycle', severity: 'medium' },
+    { label: 'Reduced discretionary spending', severity: 'low' },
+    { label: 'Increased ATM withdrawals', severity: 'medium' },
+    { label: 'Failed auto-debit attempts', severity: 'high' },
+  ] as const;
+
+  const recentBehavioralTransactions = [
+    { date: '2026-02-07', transactionType: 'UPI Transfer', category: 'Lending App', amount: 'Rs 8,500', signal: 'Stress' },
+    { date: '2026-02-01', transactionType: 'Salary Credit', category: 'Income', amount: 'Rs 64,000', signal: 'Neutral' },
+    { date: '2026-01-28', transactionType: 'Auto-Debit', category: 'EMI Payment', amount: 'Rs 45,000', signal: 'Stress' },
+    { date: '2026-01-21', transactionType: 'Electricity Bill', category: 'Utilities', amount: 'Rs 3,400', signal: 'Neutral' },
+    { date: '2026-01-14', transactionType: 'ATM Withdrawal', category: 'Cash', amount: 'Rs 12,000', signal: 'Stress' },
+    { date: '2025-12-29', transactionType: 'POS Spend', category: 'Discretionary', amount: 'Rs 2,100', signal: 'Positive' },
+  ];
+
+  const severityClasses: Record<(typeof stressIndicators)[number]['severity'], string> = {
+    low: 'bg-emerald-500/15 text-emerald-300 border border-emerald-400/20',
+    medium: 'bg-amber-500/15 text-amber-300 border border-amber-400/20',
+    high: 'bg-red-500/15 text-red-300 border border-red-400/20',
+  };
+
+  const signalClasses: Record<(typeof recentBehavioralTransactions)[number]['signal'], string> = {
+    Positive: 'bg-emerald-50 text-emerald-600',
+    Neutral: 'bg-amber-50 text-amber-600',
+    Stress: 'bg-red-50 text-red-600',
+  };
+
   return (
     <motion.main initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="max-w-[1600px] mx-auto px-8 py-12">
       <button
@@ -128,6 +159,21 @@ const CustomerProfileView = ({ customer, onBack }: CustomerProfileViewProps) => 
                   </p>
                 </div>
               </div>
+              <div className="pt-2">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                  Early Behavioral Stress Indicators
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {stressIndicators.map((indicator) => (
+                    <span
+                      key={indicator.label}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider ${severityClasses[indicator.severity]}`}
+                    >
+                      {indicator.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -149,6 +195,40 @@ const CustomerProfileView = ({ customer, onBack }: CustomerProfileViewProps) => 
                   <Area type="monotone" dataKey="balance" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorBalancePage)" />
                 </AreaChart>
               </ResponsiveContainer>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-slate-100">
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] mb-4">
+                Recent Behavioral Transactions (Last 30-60 Days)
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50/70">
+                      <th className="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</th>
+                      <th className="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction Type</th>
+                      <th className="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</th>
+                      <th className="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount</th>
+                      <th className="px-4 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Stress Signal Tag</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {recentBehavioralTransactions.map((txn) => (
+                      <tr key={`${txn.date}-${txn.transactionType}`} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="px-4 py-3 text-[11px] font-bold text-slate-700">{txn.date}</td>
+                        <td className="px-4 py-3 text-[11px] font-black text-slate-900">{txn.transactionType}</td>
+                        <td className="px-4 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wide">{txn.category}</td>
+                        <td className="px-4 py-3 text-[11px] font-black text-slate-900">{txn.amount}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest ${signalClasses[txn.signal]}`}>
+                            {txn.signal}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
