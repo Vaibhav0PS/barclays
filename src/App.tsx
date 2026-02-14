@@ -36,6 +36,8 @@ function App() {
     }
   };
 
+  // just for test comment to commit
+
   return (
     <div className="flex bg-[#f8fafc] min-h-screen text-slate-900 selection:bg-blue-100 selection:text-blue-900">
       <Sidebar 
