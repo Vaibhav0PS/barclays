@@ -365,7 +365,18 @@
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
                         <div class="summary-info">
-                            <div class="summary-label">Provision Coverage</div>
+                            <div class="summary-label">
+                                Provision Coverage
+                                <!-- FIX 8: Add info icon with tooltip -->
+                                <span class="info-icon-wrapper" style="position: relative; display: inline-block; margin-left: 6px;">
+                                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" style="cursor: help; vertical-align: middle;">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <span class="info-tooltip">RBI IRACP norms mandate a minimum Provision Coverage Ratio of 70%. Current PCR of 82% indicates adequate provisioning buffer above regulatory minimum.</span>
+                                </span>
+                            </div>
                             <div class="summary-value" id="npa-provision">0%</div>
                             <div class="summary-change">Regulatory Min: 70%</div>
                         </div>
@@ -415,10 +426,20 @@
                         </div>
                     </div>
 
-                    <!-- Early Warning - Potential NPA -->
-                    <div class="table-card" style="grid-column: 1 / -1;">
+                    <!-- FIX 4: Early Warning Table with clear section separation -->
+                    <div class="table-card" style="grid-column: 1 / -1; margin-top: 32px;">
+                        <div class="npa-section-divider">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" style="margin-right: 8px;">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <div>
+                                <h3>Early Warning — Pre-Delinquency Accounts (Special Mention Account Watch List)</h3>
+                                <p class="section-subtitle">Customers approaching SMA-0 classification — intervention required before EMI miss</p>
+                            </div>
+                        </div>
                         <div class="card-header">
-                            <h3>Early Warning - High Risk Accounts (Potential NPA)</h3>
                             <div class="header-actions">
                                 <span class="alert-badge" id="potential-npa-count">0 Accounts</span>
                                 <select class="filter-select-small" id="potential-npa-filter" onchange="filterPotentialNPA()">
@@ -441,6 +462,8 @@
                                         <th>EMI Amount</th>
                                         <th>Next EMI Date</th>
                                         <th>Days to EMI</th>
+                                        <th>SMA Stage</th>
+                                        <th>Days to NPA</th>
                                         <th>Miss Probability</th>
                                         <th>Risk Level</th>
                                         <th>Action</th>

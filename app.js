@@ -1,7 +1,7 @@
 // Enhanced mock data with more customers
 const mockCustomers = [
     {
-        id: 'CUST001', name: 'Rajesh Kumar', loanAmount: 500000, riskLevel: 'high', riskScore: 85,
+        id: 'CUST001', name: 'Rushikesh Pathare', loanAmount: 500000, riskLevel: 'high', riskScore: 85,
         email: 'rajesh.kumar@email.com', phone: '+91-9876543210', accountNumber: 'ACC1234567890',
         loanType: 'Personal Loan', emiAmount: 15000, nextEmiDate: '2026-02-25', lastActivity: '2 hours ago',
         riskParameters: [
@@ -975,45 +975,47 @@ function initNPADashboard() {
 }
 
 function updateNPAMetrics() {
+    // FIX 9: Fixed seed for consistent data
     // Calculate NPA metrics from mock data
-    // ⚠️ BANKING-GRADE REALISTIC VALUES
+    // ⚠️ BANKING-GRADE REALISTIC VALUES aligned with RBI IRACP norms
     // Gross NPA: 3.6% (realistic for stressed NBFC/bank)
     // Net NPA: 0.7% (after 82% provision coverage)
-    // Total Loan Book: ₹55 Cr (portfolio size)
+    // Total Loan Book: ₹4.90 Cr (portfolio size - FIXED)
     
-    const totalLoanBook = 5500000000; // ₹55 Cr total loan portfolio
+    const totalLoanBook = 490000000; // FIX 3: ₹4.90 Cr total loan portfolio (matches dashboard)
     const grossNPARatio = 3.6; // 3.6% - realistic stressed portfolio
     const provisionCoverage = 82; // 82% provision coverage (above RBI 70% minimum)
     const netNPARatio = (grossNPARatio * (100 - provisionCoverage) / 100).toFixed(2); // 0.65%
     
     // Calculate NPA amounts
-    const totalNPAAmount = (totalLoanBook * grossNPARatio / 100); // ₹1.98 Cr
+    const totalNPAAmount = (totalLoanBook * grossNPARatio / 100); // ₹0.176 Cr
     const netNPAAmount = (totalLoanBook * netNPARatio / 100);
     
-    // Slippage and recovery (realistic monthly values)
-    const slippageAmount = 1800000; // ₹0.18 Cr (2 accounts slipped)
-    const recoveryAmount = 2200000; // ₹0.22 Cr (2 accounts recovered - positive trend)
+    // FIX 3 & 10: Slippage and Upgrade (RBI terminology) - realistic monthly values
+    const slippageAmount = 1800000; // ₹0.18 Cr (2 accounts slipped to NPA)
+    const upgradeAmount = 2200000; // FIX 10: Use "Upgrade" not "Recovery" for NPA returning to standard
     const slippageCount = 2;
-    const recoveryCount = 2;
+    const upgradeCount = 2;
     
     // Update UI with realistic values
     document.getElementById('npa-gross-ratio').textContent = `${grossNPARatio.toFixed(2)}%`;
     document.getElementById('npa-net-ratio').textContent = `${netNPARatio}%`;
     document.getElementById('npa-total-amount').textContent = `₹${(totalNPAAmount / 10000000).toFixed(2)}Cr`;
     document.getElementById('npa-slippage').textContent = `₹${(slippageAmount / 10000000).toFixed(2)}Cr`;
-    document.getElementById('npa-recovery').textContent = `₹${(recoveryAmount / 10000000).toFixed(2)}Cr`;
+    document.getElementById('npa-recovery').textContent = `₹${(upgradeAmount / 10000000).toFixed(2)}Cr`;
     document.getElementById('npa-provision').textContent = `${provisionCoverage}%`;
     
-    // Update trend indicators
-    const grossTrend = 0.2; // +0.2% vs last month (slight increase)
+    // FIX 6: Correct arrow direction - rising NPA is bad (upward arrow in red)
+    const grossTrend = 0.2; // +0.2% vs last month (deterioration)
     document.getElementById('npa-gross-trend').innerHTML = `
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
+            <polyline points="18 15 12 9 6 15"></polyline>
         </svg>
         +${grossTrend.toFixed(1)}% vs last month
     `;
     
-    document.getElementById('npa-net-trend').textContent = 'Stable';
+    // FIX 7: Net NPA consistency - show percentage change
+    document.getElementById('npa-net-trend').textContent = '0.0% vs last month • Stable';
     
     document.getElementById('npa-slippage-count').innerHTML = `
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1026,7 +1028,7 @@ function updateNPAMetrics() {
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="18 15 12 9 6 15"></polyline>
         </svg>
-        ${recoveryCount} accounts
+        ${upgradeCount} accounts
     `;
 }
 
@@ -1037,6 +1039,7 @@ function renderNPATrendChart() {
         npaTrendChart.destroy();
     }
     
+    // FIX 9: Fixed seed for consistent data
     // Generate 12 months of REALISTIC NPA data
     // Banking-grade gradual movement (NOT steep spikes)
     const months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'];
@@ -1047,15 +1050,45 @@ function renderNPATrendChart() {
     // Net NPA: Always below Gross, gradual movement
     const netNPA = [0.50, 0.52, 0.54, 0.56, 0.54, 0.58, 0.60, 0.62, 0.58, 0.60, 0.63, 0.65];
     
-    // Predicted values (dashed) - slight upward trend
+    // FIX 5: Predicted values with uncertainty bands
     const predictedGross = [null, null, null, null, null, null, null, null, null, null, 3.5, 3.7];
     const predictedNet = [null, null, null, null, null, null, null, null, null, null, 0.63, 0.67];
+    
+    // FIX 5: Uncertainty bands (±0.2%)
+    const predictedGrossUpper = [null, null, null, null, null, null, null, null, null, null, 3.7, 3.9];
+    const predictedGrossLower = [null, null, null, null, null, null, null, null, null, null, 3.3, 3.5];
+    const predictedNetUpper = [null, null, null, null, null, null, null, null, null, null, 0.83, 0.87];
+    const predictedNetLower = [null, null, null, null, null, null, null, null, null, null, 0.43, 0.47];
     
     npaTrendChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: months,
             datasets: [
+                // FIX 5: Uncertainty bands (shaded areas)
+                {
+                    label: 'Forecast Uncertainty',
+                    data: predictedGrossUpper,
+                    borderColor: 'transparent',
+                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                    fill: '+1',
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 0,
+                    order: 5
+                },
+                {
+                    label: 'Forecast Lower',
+                    data: predictedGrossLower,
+                    borderColor: 'transparent',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    borderWidth: 0,
+                    order: 6
+                },
+                // FIX 5: Actual lines - solid with filled dots
                 {
                     label: 'Gross NPA %',
                     data: grossNPA,
@@ -1068,7 +1101,8 @@ function renderNPATrendChart() {
                     pointBackgroundColor: '#DC2626',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    borderWidth: 3
+                    borderWidth: 3,
+                    order: 1
                 },
                 {
                     label: 'Net NPA %',
@@ -1082,8 +1116,10 @@ function renderNPATrendChart() {
                     pointBackgroundColor: '#F59E0B',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    borderWidth: 3
+                    borderWidth: 3,
+                    order: 2
                 },
+                // FIX 5: Predicted lines - dashed with hollow dots
                 {
                     label: 'Predicted Gross NPA %',
                     data: predictedGross,
@@ -1093,11 +1129,12 @@ function renderNPATrendChart() {
                     fill: false,
                     pointRadius: 5,
                     pointHoverRadius: 7,
-                    pointBackgroundColor: '#DC2626',
-                    pointBorderColor: '#fff',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#DC2626',
                     pointBorderWidth: 2,
                     borderWidth: 3,
-                    borderDash: [8, 4]
+                    borderDash: [8, 4],
+                    order: 3
                 },
                 {
                     label: 'Predicted Net NPA %',
@@ -1108,11 +1145,12 @@ function renderNPATrendChart() {
                     fill: false,
                     pointRadius: 5,
                     pointHoverRadius: 7,
-                    pointBackgroundColor: '#F59E0B',
-                    pointBorderColor: '#fff',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#F59E0B',
                     pointBorderWidth: 2,
                     borderWidth: 3,
-                    borderDash: [8, 4]
+                    borderDash: [8, 4],
+                    order: 4
                 }
             ]
         },
@@ -1133,7 +1171,11 @@ function renderNPATrendChart() {
                         pointStyle: 'circle',
                         padding: 15,
                         font: { size: 11, weight: '600' },
-                        color: '#374151'
+                        color: '#374151',
+                        filter: function(item) {
+                            // Hide uncertainty band datasets from legend
+                            return item.text !== 'Forecast Uncertainty' && item.text !== 'Forecast Lower';
+                        }
                     }
                 },
                 tooltip: {
@@ -1314,26 +1356,26 @@ function renderNPAWaterfallChart() {
         npaWaterfallChart.destroy();
     }
     
-    // Waterfall data
-    const openingNPA = 230;
-    const newSlippages = 18;
-    const recoveries = -12;
-    const writeOffs = -3;
-    const closingNPA = openingNPA + newSlippages + recoveries + writeOffs;
+    // FIX 3 & 9: Waterfall data scaled to match ₹4.90Cr portfolio (fixed values)
+    const openingNPA = 4.20; // ₹4.20Cr
+    const newSlippages = 0.18; // +₹0.18Cr (red bar, upward)
+    const upgrades = -0.22; // FIX 10: -₹0.22Cr (green bar, downward) - use "Upgrade" terminology
+    const writeOffs = -0.05; // -₹0.05Cr (yellow bar, downward)
+    const closingNPA = 4.11; // ₹4.11Cr (dark blue bar)
     
     npaWaterfallChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Opening NPA', 'New Slippages', 'Recoveries', 'Write-offs', 'Closing NPA'],
+            labels: ['Opening NPA', 'New Slippages', 'Upgrades', 'Write-offs', 'Closing NPA'],
             datasets: [{
                 label: 'NPA Movement (₹Cr)',
-                data: [openingNPA, newSlippages, recoveries, writeOffs, closingNPA],
+                data: [openingNPA, newSlippages, upgrades, writeOffs, closingNPA],
                 backgroundColor: [
-                    '#6B7280',
-                    '#DC2626',
-                    '#10B981',
-                    '#F59E0B',
-                    '#003D6A'
+                    '#6B7280', // Opening - gray
+                    '#DC2626', // Slippages - red
+                    '#10B981', // Upgrades - green
+                    '#F59E0B', // Write-offs - yellow
+                    '#003D6A'  // Closing - dark blue
                 ],
                 borderWidth: 0
             }]
@@ -1347,7 +1389,12 @@ function renderNPAWaterfallChart() {
                     callbacks: {
                         label: function(context) {
                             const value = context.parsed.y;
-                            return `Amount: ₹${Math.abs(value).toFixed(1)}Cr`;
+                            const label = context.label;
+                            // FIX 10: Use RBI terminology
+                            if (label === 'Upgrades') {
+                                return `Upgrades (NPA to Standard): ₹${Math.abs(value).toFixed(2)}Cr`;
+                            }
+                            return `Amount: ₹${Math.abs(value).toFixed(2)}Cr`;
                         }
                     }
                 }
@@ -1355,11 +1402,12 @@ function renderNPAWaterfallChart() {
             scales: {
                 y: {
                     beginAtZero: true,
+                    max: 5, // FIX 3: Scale to match portfolio
                     ticks: {
                         font: { size: 11, weight: '500' },
                         color: '#6B7280',
                         callback: function(value) {
-                            return '₹' + value + 'Cr';
+                            return '₹' + value.toFixed(1) + 'Cr';
                         }
                     },
                     grid: {
@@ -1378,20 +1426,64 @@ function renderNPAWaterfallChart() {
                     }
                 }
             }
-        }
+        },
+        plugins: [{
+            id: 'waterfallLabels',
+            afterDatasetsDraw: function(chart) {
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(0);
+                
+                ctx.save();
+                ctx.font = 'bold 11px Inter, Arial';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#003D6A';
+                
+                meta.data.forEach((bar, index) => {
+                    const value = chart.data.datasets[0].data[index];
+                    const label = `₹${Math.abs(value).toFixed(2)}Cr`;
+                    ctx.fillText(label, bar.x, bar.y - 8);
+                });
+                
+                ctx.restore();
+            }
+        }]
     });
 }
 
 function renderPotentialNPATable() {
+    // FIX 9: Use seeded random for consistent data
+    let tableSeed = 99999;
+    function tableSeededRandom() {
+        tableSeed = (tableSeed * 9301 + 49297) % 233280;
+        return tableSeed / 233280;
+    }
+    
     // Filter high-risk customers with high miss probability
     const potentialNPAs = mockCustomers.filter(c => c.riskLevel === 'high' && c.riskScore >= 70);
     
     document.getElementById('potential-npa-count').textContent = `${potentialNPAs.length} Accounts`;
     
     const tbody = document.getElementById('potential-npa-table');
-    tbody.innerHTML = potentialNPAs.map(c => {
-        const daysToEMI = Math.floor(Math.random() * 15) + 1;
+    tbody.innerHTML = potentialNPAs.map((c, index) => {
+        // FIX 9: Fixed days to EMI based on index for consistency
+        const daysToEMI = Math.floor((index * 7 + 3) % 28) + 1; // Varies between 1-28 days
         const missProbability = c.riskScore;
+        
+        // FIX 1 & 2: Calculate SMA stage and Days to NPA
+        let smaStage = 'Pre-SMA';
+        let smaClass = 'sma-pre';
+        let daysToNPA = daysToEMI + 90; // FIX 2: Days to EMI + 90 days = Days to NPA
+        
+        // FIX 1: SMA Classification based on RBI IRACP norms
+        // Pre-SMA: Not yet overdue (blue)
+        // SMA-0: 1-30 days overdue (yellow)
+        // SMA-1: 31-60 days overdue (orange)
+        // SMA-2: 61-90 days overdue (red)
+        // NPA: 90+ days overdue (dark red)
+        
+        // For pre-delinquency customers, all are Pre-SMA
+        smaStage = 'Pre-SMA';
+        smaClass = 'sma-pre';
         
         return `
             <tr>
@@ -1402,6 +1494,8 @@ function renderPotentialNPATable() {
                 <td>₹${c.emiAmount.toLocaleString()}</td>
                 <td>${c.nextEmiDate}</td>
                 <td><strong style="color: ${daysToEMI <= 7 ? '#DC2626' : '#F59E0B'}">${daysToEMI} days</strong></td>
+                <td><span class="sma-badge ${smaClass}">${smaStage}</span></td>
+                <td><strong style="color: #F59E0B;">${daysToNPA} days</strong></td>
                 <td><strong style="color: #DC2626;">${missProbability}%</strong></td>
                 <td><span class="risk-badge risk-high">CRITICAL</span></td>
                 <td><button class="btn-view" onclick="showCustomerDetail('${c.id}')">Intervene</button></td>
@@ -2008,11 +2102,11 @@ function generateRealisticDailyData(days, riskLevel) {
         salaryAmount = 70000;
         salaryDay = 1; // On-time salary
         emiAmount = 12000;
-        emiDueDay = 5; // EMI due on Day 5
+        emiDueDay = 25; // EMI due on Day 25 (but paid early on Day 5)
         
-        // LOW RISK SCENARIO: Sufficient balance, EMI paid on time
-        emiActualPaidDay = 5; // Paid on due date
-        emiStatus = 'ontime'; // Paid on time
+        // LOW RISK SCENARIO: Sufficient balance, EMI paid EARLY (20 days before due date)
+        emiActualPaidDay = 5; // Paid 20 days early - strong repayment behavior
+        emiStatus = 'ontime'; // Paid on time (early)
         emiLateDays = 0;
         emiRecoveryType = 'auto-debit'; // Normal auto-debit
         
@@ -2060,6 +2154,10 @@ function generateRealisticDailyData(days, riskLevel) {
             // FIX 2 & 4: Fixed rent payment on day 1
             dailyDebit = 9500; // Fixed rent amount
             transactionLabel = 'Rent Payment';
+        } else if (day === 25 && selectedCustomer.riskLevel === 'low') {
+            // FIX 2: Credit card bill payment on Day 25 for low risk customers
+            dailyDebit = 9000; // Fixed credit card bill
+            transactionLabel = 'Credit Card Bill';
         } else {
             // Daily expenses - small and variable
             // Weekend = lower spending
@@ -2146,7 +2244,11 @@ function renderCustomerTransactionCharts() {
             ? `Day ${transactionData.emiActualPaidDay}` 
             : `Day ${transactionData.emiDueDay} (Due)`;
         document.getElementById('emi-amount-display').textContent = `₹${(transactionData.emiAmount / 1000).toFixed(0)}K`;
-        document.getElementById('emi-coverage-ratio').textContent = `${transactionData.emiCoverageRatio}x`;
+        
+        // FIX 4: Calculate coverage ratio from current balance (not salary)
+        const currentBalanceForCoverage = selectedCustomer.riskLevel === 'low' ? 28500 : 30000;
+        const coverageRatio = (currentBalanceForCoverage / transactionData.emiAmount).toFixed(1);
+        document.getElementById('emi-coverage-ratio').textContent = `${coverageRatio}x`;
         
         // Update late days display
         if (transactionData.emiStatus === 'bounced') {
@@ -2226,16 +2328,38 @@ function renderCustomerTransactionCharts() {
         overallRiskBadge.style.display = 'none';
     }
     
-    // FIX 6: Show insight banner for bounced EMI
+    // FIX 6: Show insight banner for bounced EMI OR positive banner for low risk ontime
     const insightBanner = document.getElementById('transaction-insight-banner');
     const insightText = document.getElementById('transaction-insight-text');
     
-    if (transactionData.periodType === 'daily' && transactionData.emiStatus === 'bounced') {
+    if (transactionData.periodType === 'daily' && transactionData.emiStatus === 'ontime' && selectedCustomer.riskLevel === 'low') {
+        // FIX 5: Show positive green banner for low risk customers
+        insightBanner.style.display = 'block';
+        insightBanner.style.background = 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)';
+        insightBanner.style.borderLeft = '4px solid #10B981';
+        
+        // Update SVG icon to checkmark
+        const svgIcon = insightBanner.querySelector('svg');
+        svgIcon.setAttribute('stroke', '#10B981');
+        svgIcon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>';
+        
+        insightText.innerHTML = `<strong>✅ EMI paid on Day ${transactionData.emiActualPaidDay} — 20 days early.</strong> Customer shows strong repayment behavior. No intervention required.`;
+        insightText.style.color = '#065F46';
+    } else if (transactionData.periodType === 'daily' && transactionData.emiStatus === 'bounced') {
         const currentBalance = 30000; // This should come from actual data
         const emiAmount = transactionData.emiAmount;
         
         insightBanner.style.display = 'block';
+        insightBanner.style.background = 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)';
+        insightBanner.style.borderLeft = '4px solid #F59E0B';
+        
+        // Reset SVG icon to warning
+        const svgIcon = insightBanner.querySelector('svg');
+        svgIcon.setAttribute('stroke', '#F59E0B');
+        svgIcon.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>';
+        
         insightText.innerHTML = `<strong>EMI bounced on Day ${transactionData.emiDueDay}.</strong> Current balance (₹${(currentBalance / 1000).toFixed(0)}K) is sufficient to cover EMI (₹${(emiAmount / 1000).toFixed(0)}K) — recommend immediate re-presentation or customer outreach.`;
+        insightText.style.color = '#92400E';
     } else {
         insightBanner.style.display = 'none';
     }
@@ -2457,38 +2581,45 @@ function renderCustomerTransactionCharts() {
                 
                 ctx.save();
                 
-                // Draw vertical line
-                ctx.strokeStyle = '#DC2626';
+                // FIX 2: For LOW RISK with ontime status, show green success marker on actual paid day (Day 5)
+                const isLowRiskOnTime = transactionData.emiStatus === 'ontime' && selectedCustomer.riskLevel === 'low';
+                const markerDay = isLowRiskOnTime ? transactionData.emiActualPaidDay : transactionData.emiDueDay;
+                const markerDayX = xAxis.getPixelForValue(markerDay - 1);
+                
+                // Draw vertical line - green for low risk ontime, red for bounced
+                ctx.strokeStyle = isLowRiskOnTime ? '#10B981' : '#DC2626';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath();
-                ctx.moveTo(emiDayX, yAxis.top);
-                ctx.lineTo(emiDayX, yAxis.bottom);
+                ctx.moveTo(markerDayX, yAxis.top);
+                ctx.lineTo(markerDayX, yAxis.bottom);
                 ctx.stroke();
                 
                 // Draw EMI label with status
                 ctx.setLineDash([]);
-                ctx.fillStyle = '#991B1B';
+                ctx.fillStyle = isLowRiskOnTime ? '#065F46' : '#991B1B';
                 ctx.font = 'bold 11px Inter, Arial';
                 ctx.textAlign = 'center';
                 
-                const emiLabel = transactionData.emiStatus === 'bounced' 
-                    ? `EMI Due - ₹${(transactionData.emiAmount / 1000).toFixed(0)}K | BOUNCED`
-                    : `EMI Due - ₹${(transactionData.emiAmount / 1000).toFixed(0)}K`;
+                const emiLabel = isLowRiskOnTime
+                    ? `EMI Paid - ₹${(transactionData.emiAmount / 1000).toFixed(0)}K ✅`
+                    : transactionData.emiStatus === 'bounced' 
+                        ? `EMI Due - ₹${(transactionData.emiAmount / 1000).toFixed(0)}K | BOUNCED`
+                        : `EMI Due - ₹${(transactionData.emiAmount / 1000).toFixed(0)}K`;
                 
                 // Draw background for label
                 const textWidth = ctx.measureText(emiLabel).width;
-                ctx.fillStyle = 'rgba(254, 226, 226, 0.95)';
-                ctx.fillRect(emiDayX - textWidth/2 - 6, yAxis.top - 22, textWidth + 12, 18);
+                ctx.fillStyle = isLowRiskOnTime ? 'rgba(209, 250, 229, 0.95)' : 'rgba(254, 226, 226, 0.95)';
+                ctx.fillRect(markerDayX - textWidth/2 - 6, yAxis.top - 22, textWidth + 12, 18);
                 
                 // Draw border
-                ctx.strokeStyle = '#DC2626';
+                ctx.strokeStyle = isLowRiskOnTime ? '#10B981' : '#DC2626';
                 ctx.lineWidth = 1;
-                ctx.strokeRect(emiDayX - textWidth/2 - 6, yAxis.top - 22, textWidth + 12, 18);
+                ctx.strokeRect(markerDayX - textWidth/2 - 6, yAxis.top - 22, textWidth + 12, 18);
                 
                 // Draw text
-                ctx.fillStyle = '#991B1B';
-                ctx.fillText(emiLabel, emiDayX, yAxis.top - 9);
+                ctx.fillStyle = isLowRiskOnTime ? '#065F46' : '#991B1B';
+                ctx.fillText(emiLabel, markerDayX, yAxis.top - 9);
                 
                 // FIX 1: Add salary spike annotation if it exceeds cap
                 if (hasSalarySpike && transactionData.salaryDay) {
@@ -2584,6 +2715,12 @@ function renderCustomerTransactionCharts() {
     const actualCredits = [];
     const actualDebits = [];
     
+    // FIX 1: For LOW RISK customers, start with POSITIVE balance
+    let openingBalance = 0;
+    if (selectedCustomer.riskLevel === 'low') {
+        openingBalance = 45000; // Starting balance of ₹45K for low risk customer
+    }
+    
     for (let i = startDay - 1; i < currentDay; i++) {
         const day = i + 1;
         
@@ -2602,15 +2739,21 @@ function renderCustomerTransactionCharts() {
         let dailyDebit = Math.round(
             (dailyDebitBase + (forecastSeededRandom() * debitVariance - debitVariance / 2)) * weekendFactor
         );
+        
+        // FIX 1: For LOW RISK, include EMI payment on Day 5
+        if (selectedCustomer.riskLevel === 'low' && day === 5) {
+            dailyDebit += emiAmount; // EMI paid on Day 5
+        }
+        
         if (forecastSeededRandom() < 0.1) {
             dailyDebit += Math.round(2000 + forecastSeededRandom() * 3000);
         }
         actualDebits.push(Math.max(0, dailyDebit));
     }
     
-    // Calculate ACTUAL RUNNING BALANCE (cumulative) starting from 0
+    // Calculate ACTUAL RUNNING BALANCE (cumulative) starting from opening balance
     const actualBalances = [];
-    let runningBalance = 0;
+    let runningBalance = openingBalance;
     
     for (let i = 0; i < actualCredits.length; i++) {
         runningBalance += actualCredits[i] - actualDebits[i];
@@ -2631,7 +2774,8 @@ function renderCustomerTransactionCharts() {
     const predictedBalancesLower = []; // FIX 5: Lower confidence band
     let projectedBalance = currentBalance;
     
-    const confidenceMargin = 0.15; // ±15% uncertainty
+    // FIX 7: Lower uncertainty for low risk customers (±10% instead of ±15%)
+    const confidenceMargin = selectedCustomer.riskLevel === 'low' ? 0.10 : 0.15;
     
     for (let i = 0; i < remainingDays; i++) {
         const day = currentDay + i + 1;
@@ -2646,8 +2790,8 @@ function renderCustomerTransactionCharts() {
         // Use last 7 days average with variance (not flat line)
         let predictedDebit = Math.round(avgDailyDebit * weekendFactor * (0.85 + forecastSeededRandom() * 0.3));
         
-        // EMI DEDUCTION on Day 25 EXACTLY
-        if (day === emiDueDay) {
+        // EMI DEDUCTION on Day 25 EXACTLY (but for LOW RISK, already paid on Day 5)
+        if (day === emiDueDay && selectedCustomer.riskLevel !== 'low') {
             predictedDebit += emiAmount;
         }
         
@@ -2740,6 +2884,7 @@ function renderCustomerTransactionCharts() {
     };
     
     // Update UI with ACCURATE values
+    // FIX 1: Show correct current balance for low risk customer
     document.getElementById('customer-current-balance').textContent = `₹${(currentBalance / 1000).toFixed(1)}K`;
     document.getElementById('customer-predicted-balance').textContent = `₹${(emiAmount / 1000).toFixed(0)}K`;
     
@@ -2778,9 +2923,9 @@ function renderCustomerTransactionCharts() {
         data: {
             labels: currentMonthData.labels,
             datasets: [
-                // FIX 5: Confidence band (shaded area)
+                // FIX 5: Confidence band (shaded area) - FIX 7: Show ±10% for low risk
                 {
-                    label: 'Forecast Uncertainty (±15%)',
+                    label: selectedCustomer.riskLevel === 'low' ? 'Forecast Uncertainty (±10%)' : 'Forecast Uncertainty (±15%)',
                     data: currentMonthData.predictedBalancesUpper,
                     borderColor: 'transparent',
                     backgroundColor: 'rgba(147, 51, 234, 0.15)',
@@ -2859,10 +3004,18 @@ function renderCustomerTransactionCharts() {
                     segment: {
                         borderColor: ctx => {
                             const value = ctx.p1.parsed.y;
+                            // FIX 3: For LOW RISK, don't show red even if negative
+                            if (selectedCustomer.riskLevel === 'low') {
+                                return '#9333EA';
+                            }
                             return value < 0 ? '#DC2626' : '#9333EA';
                         },
                         backgroundColor: ctx => {
                             const value = ctx.p1.parsed.y;
+                            // FIX 3: For LOW RISK, don't show red danger zone
+                            if (selectedCustomer.riskLevel === 'low') {
+                                return 'rgba(147, 51, 234, 0.08)';
+                            }
                             return value < 0 ? 'rgba(220, 38, 38, 0.15)' : 'rgba(147, 51, 234, 0.08)';
                         }
                     }
@@ -2891,7 +3044,7 @@ function renderCustomerTransactionCharts() {
                             // FIX 1: Show only essential datasets - remove threshold from legend since it's shown on chart
                             return item.text === 'Actual Balance' || 
                                    item.text === 'Predicted Balance' ||
-                                   item.text === 'Forecast Uncertainty (±15%)';
+                                   item.text.includes('Forecast Uncertainty');
                         }
                     }
                 },
@@ -2934,8 +3087,8 @@ function renderCustomerTransactionCharts() {
                                 return null;
                             }
                             
-                            if (label === 'Forecast Uncertainty (±15%)') {
-                                return 'Forecast Range: ±15%';
+                            if (label.includes('Forecast Uncertainty')) {
+                                return label.replace('Forecast Uncertainty', 'Forecast Range');
                             }
                             
                             return `${label}: ₹${(value / 1000).toFixed(1)}K`;
@@ -3059,14 +3212,17 @@ function renderCustomerTransactionCharts() {
                 const xAxis = chart.scales.x;
                 const yAxis = chart.scales.y;
                 
-                // FIX 2: Draw vertical dashed red line at EMI day with BOUNCED label
+                // FIX 1: Draw vertical dashed line at EMI day - green for low risk ontime, red for bounced
                 const emiDayIndex = currentMonthData.emiDueDay - startDay;
                 const emiDayX = xAxis.getPixelForValue(emiDayIndex);
                 
                 ctx.save();
                 
-                // Draw vertical line
-                ctx.strokeStyle = '#DC2626';
+                // FIX 1: Check if low risk customer with ontime payment
+                const isLowRiskOnTime = selectedCustomer.riskLevel === 'low' && currentMonthData.emiStatus === 'ontime';
+                
+                // Draw vertical line - green for low risk ontime, red for bounced
+                ctx.strokeStyle = isLowRiskOnTime ? '#10B981' : '#DC2626';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath();
@@ -3079,21 +3235,24 @@ function renderCustomerTransactionCharts() {
                 ctx.font = 'bold 11px Inter, Arial';
                 ctx.textAlign = 'center';
                 
-                const emiLabel = `EMI Due - ₹${(emiAmount / 1000).toFixed(0)}K | BOUNCED`;
+                // FIX 1: Show green "EMI Paid" for low risk, red "BOUNCED" for others
+                const emiLabel = isLowRiskOnTime 
+                    ? `EMI Paid - ₹${(emiAmount / 1000).toFixed(0)}K ✅`
+                    : `EMI Due - ₹${(emiAmount / 1000).toFixed(0)}K | BOUNCED`;
                 
                 // Draw background for label - positioned lower
                 const textWidth = ctx.measureText(emiLabel).width;
                 const labelY = yAxis.top + 35; // Move down to avoid legend
-                ctx.fillStyle = 'rgba(254, 226, 226, 0.95)';
+                ctx.fillStyle = isLowRiskOnTime ? 'rgba(209, 250, 229, 0.95)' : 'rgba(254, 226, 226, 0.95)';
                 ctx.fillRect(emiDayX - textWidth/2 - 6, labelY, textWidth + 12, 18);
                 
                 // Draw border
-                ctx.strokeStyle = '#DC2626';
+                ctx.strokeStyle = isLowRiskOnTime ? '#10B981' : '#DC2626';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(emiDayX - textWidth/2 - 6, labelY, textWidth + 12, 18);
                 
                 // Draw text
-                ctx.fillStyle = '#991B1B';
+                ctx.fillStyle = isLowRiskOnTime ? '#065F46' : '#991B1B';
                 ctx.fillText(emiLabel, emiDayX, labelY + 13);
                 
                 // FIX 4: Add annotation for negative opening balance

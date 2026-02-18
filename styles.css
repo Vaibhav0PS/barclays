@@ -1611,6 +1611,116 @@ body {
     transition: all 0.3s ease;
 }
 
+/* SMA Classification Badges */
+.sma-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sma-badge.sma-pre {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+    color: #1E40AF;
+    box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+}
+
+.sma-badge.sma-0 {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    color: #92400E;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+.sma-badge.sma-1 {
+    background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
+    color: #9A3412;
+    box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
+}
+
+.sma-badge.sma-2 {
+    background: linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%);
+    color: #991B1B;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+}
+
+.sma-badge.sma-npa {
+    background: linear-gradient(135deg, #991B1B 0%, #7F1D1D 100%);
+    color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(127, 29, 29, 0.3);
+}
+
+/* NPA Section Divider */
+.npa-section-divider {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    border-left: 4px solid #F59E0B;
+    border-radius: 8px 8px 0 0;
+    margin: -28px -28px 20px -28px;
+}
+
+.npa-section-divider h3 {
+    font-size: 16px;
+    color: #003D6A;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.section-subtitle {
+    font-size: 13px;
+    color: #92400E;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Info Icon Tooltip */
+.info-icon-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.info-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    background: rgba(0, 61, 106, 0.95);
+    color: white;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.5;
+    z-index: 1000;
+    transition: opacity 0.3s, visibility 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.info-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 61, 106, 0.95);
+}
+
+.info-icon-wrapper:hover .info-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
 /* Transaction Insight Banner */
 .transaction-insight-banner {
     animation: slideDown 0.3s ease-out;
