@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Delinquency Intervention Engine - BARCLAYS</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-section">
+            <svg class="barclays-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                <text x="10" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#00AEEF">BARCLAYS</text>
+            </svg>
+        </div>
+        <div class="top-nav">
+            <span class="nav-link" onclick="showDashboard()">Home</span>
+            <span class="nav-link" onclick="showNPADashboard()">NPA Intelligence</span>
+            <span class="nav-link" onclick="showSystemHealthDashboard()">System Health</span>
+            <span class="nav-link">Accounts</span>
+            <span class="nav-link">Payments</span>
+            <span class="nav-link">Help</span>
+        </div>
+        <div class="user-section">
+            <span class="user-name">Welcome, Portfolio Manager</span>
+            <button class="btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </button>
+            <button class="btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" onclick="showDashboard()">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-npa" onclick="showNPADashboard()">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span>NPA Intelligence</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-system-health" onclick="showSystemHealthDashboard()">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>System Health</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Portfolio</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span>Risk Alerts</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Reports</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2"></path>
+                </svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <main class="main-content">
+            <div id="dashboard-view" class="content-area">
+                <div class="page-header">
+                    <div>
+                        <h1>Pre-Delinquency Intervention Dashboard</h1>
+                        <p class="subtitle">Real-time risk monitoring and early intervention system</p>
+                    </div>
+                    <div class="header-controls">
+                        <select class="filter-select">
+                            <option>Last 30 Days</option>
+                            <option>Last 90 Days</option>
+                            <option>Last 6 Months</option>
+                        </select>
+                        <button class="btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="portfolio-summary">
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00AEEF" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Total Customers</div>
+                            <div class="summary-value" id="total-customers">0</div>
+                            <div class="summary-change">Active loan accounts</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Total At Risk</div>
+                            <div class="summary-value warning" id="at-risk-customers">0</div>
+                            <div class="summary-change negative">Requires attention</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00AEEF" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Total Loan Amount</div>
+                            <div class="summary-value" id="total-loan-amount">₹0</div>
+                            <div class="summary-change">Outstanding portfolio</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Total Received</div>
+                            <div class="summary-value" id="total-received">₹0</div>
+                            <div class="summary-change positive">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                +8.5% this month
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>Risk Distribution</h3>
+                            <button class="btn-link">View Details</button>
+                        </div>
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div class="chart-container" style="flex: 0 0 250px;">
+                                <canvas id="riskChart"></canvas>
+                            </div>
+                            <div class="risk-legend" style="flex: 1;">
+                                <div class="legend-item clickable" data-filter="low" onclick="showCustomerList('low')">
+                                    <span class="legend-dot green"></span>
+                                    <span class="legend-label">Low Risk</span>
+                                    <span class="legend-value" id="low-risk-count">0</span>
+                                </div>
+                                <div class="legend-item clickable" data-filter="medium" onclick="showCustomerList('medium')">
+                                    <span class="legend-dot orange"></span>
+                                    <span class="legend-label">Medium Risk</span>
+                                    <span class="legend-value" id="medium-risk-count">0</span>
+                                </div>
+                                <div class="legend-item clickable" data-filter="high" onclick="showCustomerList('high')">
+                                    <span class="legend-dot red"></span>
+                                    <span class="legend-label">High Risk</span>
+                                    <span class="legend-value" id="high-risk-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>Loan Portfolio Breakdown</h3>
+                            <button class="btn-link">View All</button>
+                        </div>
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div class="chart-container" style="flex: 0 0 250px;">
+                                <canvas id="loanTypeChart"></canvas>
+                            </div>
+                            <div class="risk-legend" style="flex: 1;" id="loan-type-legend">
+                                <!-- Will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert-card">
+                        <div class="card-header">
+                            <h3>Priority Alerts</h3>
+                            <span class="alert-badge">12 New</span>
+                        </div>
+                        <div class="alert-list" id="alert-list"></div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="card-header">
+                            <h3>High-Risk Customers</h3>
+                            <div class="header-actions">
+                                <input type="search" placeholder="Search..." class="search-input-small">
+                                <button class="btn-link" onclick="showCustomerList('high')">View All</button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Loan Type</th>
+                                        <th>Amount</th>
+                                        <th>Risk Score</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="high-risk-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NPA Intelligence Dashboard -->
+            <div id="npa-dashboard-view" class="content-area" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <h1>NPA Intelligence & Monitoring</h1>
+                        <p class="subtitle">Regulatory compliance and strategic asset quality monitoring</p>
+                    </div>
+                    <div class="header-controls">
+                        <select class="filter-select" id="npa-period-filter">
+                            <option>Last 12 Months</option>
+                            <option>Last 6 Months</option>
+                            <option>Last Quarter</option>
+                            <option>Current FY</option>
+                        </select>
+                        <button class="btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export NPA Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- NPA KPI Summary -->
+                <div class="portfolio-summary" style="grid-template-columns: repeat(6, 1fr);">
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Gross NPA Ratio</div>
+                            <div class="summary-value warning" id="npa-gross-ratio">0%</div>
+                            <div class="summary-change negative" id="npa-gross-trend">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                                +0.2% vs last month
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Net NPA Ratio</div>
+                            <div class="summary-value" id="npa-net-ratio">0%</div>
+                            <div class="summary-change" id="npa-net-trend">Stable</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Total NPA Amount</div>
+                            <div class="summary-value warning" id="npa-total-amount">₹0Cr</div>
+                            <div class="summary-change">Outstanding NPAs</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Slippage This Month</div>
+                            <div class="summary-value warning" id="npa-slippage">₹0Cr</div>
+                            <div class="summary-change negative" id="npa-slippage-count">0 accounts</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Recovery This Month</div>
+                            <div class="summary-value" style="color: #10B981;" id="npa-recovery">₹0Cr</div>
+                            <div class="summary-change positive" id="npa-recovery-count">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                0 accounts
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <svg class="summary-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00AEEF" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <div class="summary-info">
+                            <div class="summary-label">Provision Coverage</div>
+                            <div class="summary-value" id="npa-provision">0%</div>
+                            <div class="summary-change">Regulatory Min: 70%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- NPA Trend Chart -->
+                    <div class="chart-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3>NPA Trend Analysis</h3>
+                            <div class="header-actions">
+                                <button class="btn-link" onclick="toggleNPATrendView()">
+                                    <span id="npa-trend-toggle-text">Switch to Quarterly</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="npaTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Segment-wise NPA -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>Segment-wise NPA Distribution</h3>
+                            <button class="btn-link">View Details</button>
+                        </div>
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div class="chart-container" style="flex: 0 0 250px;">
+                                <canvas id="npaSegmentChart"></canvas>
+                            </div>
+                            <div class="risk-legend" style="flex: 1;" id="npa-segment-legend">
+                                <!-- Will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slippage & Recovery Flow -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>NPA Movement (Waterfall)</h3>
+                            <button class="btn-link">View Details</button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="npaWaterfallChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Early Warning - Potential NPA -->
+                    <div class="table-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3>Early Warning - High Risk Accounts (Potential NPA)</h3>
+                            <div class="header-actions">
+                                <span class="alert-badge" id="potential-npa-count">0 Accounts</span>
+                                <select class="filter-select-small" id="potential-npa-filter" onchange="filterPotentialNPA()">
+                                    <option value="all">All High Risk</option>
+                                    <option value="critical">Critical (>80%)</option>
+                                    <option value="high">High (70-80%)</option>
+                                    <option value="emi-soon">EMI Due in 7 Days</option>
+                                </select>
+                                <button class="btn-link">Export List</button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Name</th>
+                                        <th>Loan Type</th>
+                                        <th>Outstanding</th>
+                                        <th>EMI Amount</th>
+                                        <th>Next EMI Date</th>
+                                        <th>Days to EMI</th>
+                                        <th>Miss Probability</th>
+                                        <th>Risk Level</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="potential-npa-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health Dashboard -->
+            <div id="system-health-view" class="content-area" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <h1>System Health & Monitoring</h1>
+                        <p class="subtitle">Real-time infrastructure and ML pipeline monitoring</p>
+                    </div>
+                    <div class="header-controls">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-right: 20px;">
+                            <span style="font-size: 13px; color: #6B7280; font-weight: 600;">Overall Status:</span>
+                            <span class="risk-badge risk-low" id="overall-system-status">🟢 HEALTHY</span>
+                        </div>
+                        <button class="btn-secondary" onclick="refreshSystemHealth()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;" id="refresh-icon">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Overall Health Summary Cards -->
+                <div class="portfolio-summary" style="grid-template-columns: repeat(6, 1fr); margin-bottom: 32px;">
+                    <div class="summary-card system-health-card" data-status="healthy">
+                        <div class="system-status-indicator healthy"></div>
+                        <div class="summary-info">
+                            <div class="summary-label">Data Ingestion</div>
+                            <div class="system-status-text">Healthy</div>
+                            <div class="system-last-checked">Last: 2 mins ago</div>
+                            <div class="system-metric">Latency: 180ms</div>
+                        </div>
+                    </div>
+                    <div class="summary-card system-health-card" data-status="healthy">
+                        <div class="system-status-indicator healthy"></div>
+                        <div class="summary-info">
+                            <div class="summary-label">Data Lake</div>
+                            <div class="system-status-text">Healthy</div>
+                            <div class="system-last-checked">Last: 1 min ago</div>
+                            <div class="system-metric">ETL: 4.3 mins</div>
+                        </div>
+                    </div>
+                    <div class="summary-card system-health-card" data-status="running">
+                        <div class="system-status-indicator running"></div>
+                        <div class="summary-info">
+                            <div class="summary-label">Feature Engineering</div>
+                            <div class="system-status-text">Running</div>
+                            <div class="system-last-checked">Last: 3 mins ago</div>
+                            <div class="system-metric">Job: 3.2 mins</div>
+                        </div>
+                    </div>
+                    <div class="summary-card system-health-card" data-status="warning">
+                        <div class="system-status-indicator warning"></div>
+                        <div class="summary-info">
+                            <div class="summary-label">ML Batch Inference</div>
+                            <div class="system-status-text">Delayed</div>
+                            <div class="system-last-checked">Last: 5 mins ago</div>
+                            <div class="system-metric">Queue: 245</div>
+                        </div>
+                    </div>
+                    <div class="summary-card system-health-card" data-status="healthy">
+                        <div class="system-status-indicator healthy"></div>
+                        <div class="summary-info">
+                            <div class="summary-label">Risk Segmentation</div>
+                            <div class="system-status-text">Healthy</div>
+                            <div class="system-last-checked">Last: 1 min ago</div>
+                            <div class="system-metric">Rate: 850/min</div>
+                        </div>
+                    </div>
+                    <div class="summary-card system-health-card" data-status="healthy">
+                        <div class="system-status-indicator healthy"></div>
+                        <div class="summary-info">
+                            <div class="summary-label">Notification Engine</div>
+                            <div class="system-status-text">Healthy</div>
+                            <div class="system-last-checked">Last: 2 mins ago</div>
+                            <div class="system-metric">Success: 99.2%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pipeline Visual Flow -->
+                <div class="chart-card" style="margin-bottom: 32px;">
+                    <div class="card-header">
+                        <h3>Data Pipeline Flow</h3>
+                    </div>
+                    <div class="pipeline-flow">
+                        <div class="pipeline-node" data-tooltip="On-Prem system connected via VPN">
+                            <div class="pipeline-indicator healthy"></div>
+                            <div class="pipeline-label">On-Prem</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="API ingestion running smoothly - 180ms avg">
+                            <div class="pipeline-indicator healthy"></div>
+                            <div class="pipeline-label">Ingestion</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="S3 storage healthy - 2.4TB used">
+                            <div class="pipeline-indicator healthy"></div>
+                            <div class="pipeline-label">S3</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="Redshift ETL completed in 4.3 mins">
+                            <div class="pipeline-indicator healthy"></div>
+                            <div class="pipeline-label">Redshift</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="Feature job completed successfully in 3.2 mins">
+                            <div class="pipeline-indicator running"></div>
+                            <div class="pipeline-label">Feature Layer</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="ML inference delayed - queue backlog">
+                            <div class="pipeline-indicator warning"></div>
+                            <div class="pipeline-label">ML Layer</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="Risk engine processing 850 records/min">
+                            <div class="pipeline-indicator healthy"></div>
+                            <div class="pipeline-label">Risk Engine</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-node" data-tooltip="Dashboard API responding in 45ms">
+                            <div class="pipeline-indicator healthy"></div>
+                            <div class="pipeline-label">Dashboard</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Infrastructure Monitoring -->
+                    <div class="chart-card" style="grid-column: span 2;">
+                        <div class="card-header">
+                            <h3>Infrastructure Monitoring</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px;">
+                            <div class="metric-card">
+                                <div class="metric-label">API Latency</div>
+                                <div class="metric-value" id="api-latency">180ms</div>
+                                <canvas id="sparkline-api" width="200" height="40"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">ETL Duration</div>
+                                <div class="metric-value" id="etl-duration">4.3 mins</div>
+                                <canvas id="sparkline-etl" width="200" height="40"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Model Inference Time</div>
+                                <div class="metric-value" id="inference-time">220ms</div>
+                                <canvas id="sparkline-inference" width="200" height="40"></canvas>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Data Freshness Lag</div>
+                                <div class="metric-value" id="data-lag">6 mins</div>
+                                <canvas id="sparkline-lag" width="200" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ML Monitoring -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>ML Model Monitoring</h3>
+                        </div>
+                        <div style="padding: 20px;">
+                            <div class="ml-metrics-grid">
+                                <div class="ml-metric-item">
+                                    <span class="ml-metric-label">Model Version</span>
+                                    <span class="ml-metric-value">v2.3</span>
+                                </div>
+                                <div class="ml-metric-item">
+                                    <span class="ml-metric-label">AUC Score</span>
+                                    <span class="ml-metric-value">0.89</span>
+                                </div>
+                                <div class="ml-metric-item">
+                                    <span class="ml-metric-label">Drift Score</span>
+                                    <span class="ml-metric-value">Low</span>
+                                </div>
+                                <div class="ml-metric-item">
+                                    <span class="ml-metric-label">Last Retrained</span>
+                                    <span class="ml-metric-value">12 days ago</span>
+                                </div>
+                                <div class="ml-metric-item">
+                                    <span class="ml-metric-label">Predictions Today</span>
+                                    <span class="ml-metric-value" id="predictions-today">12,480</span>
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px;">
+                                <div style="font-size: 12px; color: #6B7280; margin-bottom: 10px; font-weight: 600;">Prediction Volume Trend</div>
+                                <canvas id="ml-trend-chart" width="300" height="50"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts & Incidents -->
+                    <div class="table-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <h3>Recent Alerts & Incidents</h3>
+                            <button class="btn-link">View All</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Incident ID</th>
+                                        <th>Layer</th>
+                                        <th>Severity</th>
+                                        <th>Time</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>INC001</strong></td>
+                                        <td>ML Batch</td>
+                                        <td><span class="risk-badge" style="background: #FEF3C7; color: #92400E;">Warning</span></td>
+                                        <td>10:42 AM</td>
+                                        <td>Queue backlog detected</td>
+                                        <td><span class="risk-badge risk-low">Resolved</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INC002</strong></td>
+                                        <td>ETL</td>
+                                        <td><span class="risk-badge" style="background: #DBEAFE; color: #1E40AF;">Minor</span></td>
+                                        <td>09:15 AM</td>
+                                        <td>ETL job delay - 2 mins</td>
+                                        <td><span class="risk-badge" style="background: #FEF3C7; color: #92400E;">Monitoring</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INC003</strong></td>
+                                        <td>API Gateway</td>
+                                        <td><span class="risk-badge" style="background: #FEE2E2; color: #991B1B;">High</span></td>
+                                        <td>08:30 AM</td>
+                                        <td>Latency spike - 450ms</td>
+                                        <td><span class="risk-badge risk-low">Resolved</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="customer-list-view" class="content-area" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <button class="btn-back" onclick="showDashboard()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Back
+                        </button>
+                        <h1 id="list-title">Customer Portfolio</h1>
+                    </div>
+                    <div class="header-controls">
+                        <input type="search" placeholder="Search customers..." class="search-input">
+                        <select class="filter-select">
+                            <option>All Risk Levels</option>
+                            <option>High Risk</option>
+                            <option>Medium Risk</option>
+                            <option>Low Risk</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-card full-width">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Name</th>
+                                <th>Loan Type</th>
+                                <th>Loan Amount</th>
+                                <th>EMI Amount</th>
+                                <th>Risk Level</th>
+                                <th>Risk Score</th>
+                                <th>Last Activity</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customer-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="customer-detail-view" class="content-area" style="display: none;">
+                <div class="page-header">
+                    <div>
+                        <button class="btn-back" onclick="showCustomerList()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Back
+                        </button>
+                        <h1 id="customer-name">Customer Details</h1>
+                        <p class="subtitle" id="customer-id-subtitle"></p>
+                    </div>
+                    <div class="header-controls">
+                        <button class="btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            Send Alert
+                        </button>
+                        <button class="btn-primary" onclick="openInterventionModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                                <polyline points="9 11 12 14 22 4"></polyline>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                            Initiate Intervention
+                        </button>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <div class="info-panel">
+                        <div class="panel-header">
+                            <h3>Account Overview</h3>
+                        </div>
+                        <div class="info-content" id="customer-info"></div>
+                    </div>
+
+                    <div class="info-panel">
+                        <div class="panel-header">
+                            <h3>Risk Assessment</h3>
+                            <span class="risk-score-badge" id="risk-score-badge">0</span>
+                        </div>
+                        <div class="risk-meter" id="risk-meter"></div>
+                        <div class="info-content" id="risk-summary"></div>
+                    </div>
+
+                    <div class="info-panel">
+                        <div class="panel-header">
+                            <h3>Loan Details</h3>
+                        </div>
+                        <div class="info-content" id="loan-details"></div>
+                    </div>
+
+                    <div class="info-panel">
+                        <div class="panel-header">
+                            <h3>Payment Performance</h3>
+                        </div>
+                        <div class="info-content" id="payment-performance"></div>
+                    </div>
+
+                    <div class="info-panel full-width">
+                        <div class="panel-header">
+                            <h3>Financial Stress Indicators (Last 10 Days)</h3>
+                        </div>
+                        <div class="indicators-grid" id="risk-indicators"></div>
+                    </div>
+
+                    <div class="info-panel full-width">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Transaction Analysis</h3>
+                                <!-- FIX 7: Move risk badge to prominent position at top -->
+                                <span class="transaction-risk-badge" id="transaction-overall-risk-badge" style="display: inline-block; margin-left: 16px; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 700; background: #FEF3C7; color: #92400E;">Medium Risk - 57% Miss Probability</span>
+                            </div>
+                        </div>
+                        <!-- FIX 6: Add insight banner -->
+                        <div class="transaction-insight-banner" id="transaction-insight-banner" style="display: none; margin: 16px 24px; padding: 16px 20px; background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-left: 4px solid #F59E0B; border-radius: 8px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                <span id="transaction-insight-text" style="color: #92400E; font-weight: 600; font-size: 14px; line-height: 1.5;"></span>
+                            </div>
+                        </div>
+                        <div class="customer-charts-grid">
+                            <div class="customer-chart-card">
+                                <div class="chart-header-small">
+                                    <h4>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                        Cashflow Trend
+                                    </h4>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <span class="emi-status-badge" id="emi-status-badge">EMI Paid</span>
+                                        <select class="filter-select-small" id="amount-range-filter" onchange="updateAmountTrendChart()">
+                                            <option value="1">Last 1 Month</option>
+                                            <option value="2">Last 2 Months</option>
+                                            <option value="3">Last 3 Months</option>
+                                            <option value="6" selected>Last 6 Months</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="chart-container-medium">
+                                    <canvas id="customer6MonthChart"></canvas>
+                                </div>
+                                <div class="emi-summary-row" id="emi-summary-row" style="display: none;">
+                                    <div class="emi-summary-item">
+                                        <span class="emi-summary-label">EMI Paid:</span>
+                                        <span class="emi-summary-value" id="emi-paid-day">Day 25</span>
+                                    </div>
+                                    <div class="emi-summary-item">
+                                        <span class="emi-summary-label">EMI Amount:</span>
+                                        <span class="emi-summary-value" id="emi-amount-display">₹12K</span>
+                                    </div>
+                                    <div class="emi-summary-item">
+                                        <span class="emi-summary-label">EMI Status:</span>
+                                        <span class="emi-summary-value" id="emi-status-text">Paid</span>
+                                    </div>
+                                    <div class="emi-summary-item">
+                                        <span class="emi-summary-label">Coverage Ratio:</span>
+                                        <span class="emi-summary-value" id="emi-coverage-ratio">3.7x</span>
+                                    </div>
+                                    <div class="emi-summary-item">
+                                        <span class="emi-summary-label">Late Days:</span>
+                                        <span class="emi-summary-value" id="emi-late-days">0</span>
+                                    </div>
+                                </div>
+                                <div class="chart-stats-small">
+                                    <div class="stat-small">
+                                        <span class="stat-label-small">Avg Credit</span>
+                                        <span class="stat-value-small positive" id="customer-avg-monthly">₹0</span>
+                                    </div>
+                                    <div class="stat-small">
+                                        <span class="stat-label-small">Avg Debit</span>
+                                        <span class="stat-value-small negative" id="customer-trend">₹0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="customer-chart-card">
+                                <div class="chart-header-small">
+                                    <h4>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        </svg>
+                                        Liquidity Forecast
+                                    </h4>
+                                    <span class="chart-balance" id="customer-emi-risk-badge" style="display: none;">High Risk</span>
+                                </div>
+                                <div class="chart-container-medium">
+                                    <canvas id="customerCurrentMonthChart"></canvas>
+                                </div>
+                                <div class="chart-stats-small">
+                                    <div class="stat-small">
+                                        <span class="stat-label-small">Current Balance</span>
+                                        <span class="stat-value-small" id="customer-current-balance">₹0</span>
+                                    </div>
+                                    <div class="stat-small">
+                                        <span class="stat-label-small">EMI Due Day 25</span>
+                                        <span class="stat-value-small negative" id="customer-predicted-balance">₹12K</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="transaction-comparison-summary">
+                            <div class="summary-item" id="shortfall-alert" style="display: none; background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%); border-left: 4px solid #DC2626; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                <span id="shortfall-alert-text" style="color: #991B1B; font-weight: 700; font-size: 14px;"></span>
+                            </div>
+                            <div class="summary-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00AEEF" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                                <span id="customer-comparison-text">Transaction volume stable compared to 6-month average</span>
+                            </div>
+                            <div class="summary-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span id="customer-projection-text">Projected to maintain current spending pattern</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-panel full-width">
+                        <div class="panel-header">
+                            <h3>Transaction History</h3>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <select class="filter-select-small">
+                                    <option>Last 10 Days</option>
+                                    <option>Last 30 Days</option>
+                                    <option>Last 90 Days</option>
+                                </select>
+                                <button class="btn-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: middle;">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                        <div class="transactions-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Transaction Type</th>
+                                        <th>Reference</th>
+                                        <th>Channel</th>
+                                        <th>Amount</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Transaction Details Modal -->
+    <div id="transaction-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeTransactionModal()"></div>
+        <div class="modal-content transaction-modal-content">
+            <div class="modal-header">
+                <h2>Transaction Details</h2>
+                <button class="modal-close" onclick="closeTransactionModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="transaction-detail-header">
+                    <div class="transaction-amount-display" id="txn-amount-display">
+                        <div class="txn-amount-large" id="txn-amount">₹0</div>
+                        <div class="txn-type-label" id="txn-type">Transaction Type</div>
+                    </div>
+                    <div class="transaction-status-display">
+                        <span class="risk-badge" id="txn-status-badge">SUCCESS</span>
+                    </div>
+                </div>
+
+                <div class="transaction-info-grid">
+                    <div class="txn-info-section">
+                        <h3>Transaction Information</h3>
+                        <div class="txn-info-list" id="txn-basic-info"></div>
+                    </div>
+
+                    <div class="txn-info-section">
+                        <h3>Payment Details</h3>
+                        <div class="txn-info-list" id="txn-payment-info"></div>
+                    </div>
+
+                    <div class="txn-info-section">
+                        <h3>Account Information</h3>
+                        <div class="txn-info-list" id="txn-account-info"></div>
+                    </div>
+
+                    <div class="txn-info-section">
+                        <h3>Additional Details</h3>
+                        <div class="txn-info-list" id="txn-additional-info"></div>
+                    </div>
+                </div>
+
+                <div class="transaction-timeline">
+                    <h3>Transaction Timeline</h3>
+                    <div class="timeline-list" id="txn-timeline"></div>
+                </div>
+
+                <div class="transaction-actions">
+                    <button class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download Receipt
+                    </button>
+                    <button class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                        </svg>
+                        Share
+                    </button>
+                    <button class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Report Issue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Details Modal -->
+    <div id="risk-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeRiskModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Risk Assessment Details</h2>
+                <button class="modal-close" onclick="closeRiskModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="risk-detail-header">
+                    <div class="risk-detail-score">
+                        <div class="risk-score-large" id="modal-risk-score">0</div>
+                        <div class="risk-score-label">Overall Risk Score</div>
+                    </div>
+                    <div class="risk-detail-level">
+                        <span class="risk-badge" id="modal-risk-level">HIGH</span>
+                    </div>
+                </div>
+
+                <div class="risk-parameters">
+                    <h3>Risk Parameters Breakdown</h3>
+                    <div class="parameters-grid" id="risk-parameters-grid"></div>
+                </div>
+
+                <div class="risk-factors">
+                    <h3>Contributing Factors</h3>
+                    <div class="factors-list" id="risk-factors-list"></div>
+                </div>
+
+                <div class="risk-timeline">
+                    <h3>Risk Score History</h3>
+                    <div class="timeline-chart">
+                        <canvas id="riskHistoryChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="risk-recommendations">
+                    <h3>Recommended Actions</h3>
+                    <div class="recommendations-list" id="recommendations-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Intervention Modal -->
+    <div id="intervention-modal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeInterventionModal()"></div>
+        <div class="modal-content intervention-modal-content">
+            <div class="modal-header">
+                <h2>AI-Powered Intervention Engine</h2>
+                <button class="modal-close" onclick="closeInterventionModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Customer Info Header -->
+                <div class="intervention-header">
+                    <div class="intervention-customer-info">
+                        <div class="intervention-customer-name" id="intervention-customer-name">Customer Name</div>
+                        <div class="intervention-customer-id" id="intervention-customer-id">CUST001</div>
+                    </div>
+                    <div class="intervention-risk-badge" id="intervention-risk-badge">
+                        <span class="risk-badge risk-high">HIGH RISK</span>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="intervention-metrics">
+                    <div class="intervention-metric-item">
+                        <div class="metric-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">EMI Amount</div>
+                            <div class="metric-value" id="intervention-emi-amount">₹12,000</div>
+                        </div>
+                    </div>
+                    <div class="intervention-metric-item">
+                        <div class="metric-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00AEEF" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">Days to EMI</div>
+                            <div class="metric-value" id="intervention-days-to-emi">5 days</div>
+                        </div>
+                    </div>
+                    <div class="intervention-metric-item">
+                        <div class="metric-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">Miss Probability</div>
+                            <div class="metric-value" id="intervention-miss-probability">85%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Automation Toggle -->
+                <div class="ai-automation-section">
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ai-automation-toggle" onchange="toggleAIAutomation()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="toggle-label">
+                            <div class="toggle-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                    <path d="M2 17l10 5 10-5"></path>
+                                    <path d="M2 12l10 5 10-5"></path>
+                                </svg>
+                                Enable AI Agent Automation
+                            </div>
+                            <div class="toggle-description" id="ai-automation-description">
+                                Manually select intervention strategy below
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Strategy Selection -->
+                <div class="strategy-selection" id="manual-strategy-section">
+                    <label class="form-label">Intervention Strategy</label>
+                    <select class="form-select" id="intervention-strategy" onchange="updateInterventionMessage()">
+                        <option value="soft_reminder">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle;">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Soft Reminder - Friendly payment reminder
+                        </option>
+                        <option value="urgent_reminder">Urgent Reminder - Payment due soon alert</option>
+                        <option value="restructure_offer">Restructure Offer - Loan restructuring option</option>
+                        <option value="emi_extension">EMI Extension - Extend payment deadline</option>
+                        <option value="partial_payment">Partial Payment - Accept partial EMI</option>
+                    </select>
+                </div>
+
+                <!-- AI-Generated Message -->
+                <div class="message-section">
+                    <div class="message-header">
+                        <label class="form-label">AI-Generated Message</label>
+                        <button class="btn-regenerate" onclick="regenerateMessage()" id="regenerate-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            Regenerate with AI
+                        </button>
+                    </div>
+                    <textarea class="form-textarea" id="intervention-message" rows="6" placeholder="AI-generated message will appear here..."></textarea>
+                    <div class="message-footer">
+                        <small style="color: #6B7280;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                            Compliance: Message follows RBI guidelines | Includes opt-out option | No threatening language
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Intervention Effectiveness Panel -->
+                <div class="effectiveness-panel">
+                    <div class="effectiveness-header">
+                        <h4>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                            Intervention Effectiveness Metrics
+                        </h4>
+                    </div>
+                    <div class="effectiveness-grid">
+                        <div class="effectiveness-item">
+                            <div class="effectiveness-label">Messages Sent</div>
+                            <div class="effectiveness-value">1,247</div>
+                        </div>
+                        <div class="effectiveness-item">
+                            <div class="effectiveness-label">Success Rate</div>
+                            <div class="effectiveness-value success">68.5%</div>
+                        </div>
+                        <div class="effectiveness-item">
+                            <div class="effectiveness-label">Recovery Rate</div>
+                            <div class="effectiveness-value success">₹2.4Cr</div>
+                        </div>
+                        <div class="effectiveness-item">
+                            <div class="effectiveness-label">Avg Days to Recovery</div>
+                            <div class="effectiveness-value">4.2 days</div>
+                        </div>
+                    </div>
+                    <div class="strategy-performance">
+                        <div class="strategy-performance-title">Strategy-wise Performance</div>
+                        <div class="strategy-bars">
+                            <div class="strategy-bar-item">
+                                <span class="strategy-bar-label">Soft Reminder</span>
+                                <div class="strategy-bar-container">
+                                    <div class="strategy-bar-fill" style="width: 72%; background: #10B981;"></div>
+                                </div>
+                                <span class="strategy-bar-value">72%</span>
+                            </div>
+                            <div class="strategy-bar-item">
+                                <span class="strategy-bar-label">Urgent Reminder</span>
+                                <div class="strategy-bar-container">
+                                    <div class="strategy-bar-fill" style="width: 65%; background: #F59E0B;"></div>
+                                </div>
+                                <span class="strategy-bar-value">65%</span>
+                            </div>
+                            <div class="strategy-bar-item">
+                                <span class="strategy-bar-label">Restructure Offer</span>
+                                <div class="strategy-bar-container">
+                                    <div class="strategy-bar-fill" style="width: 58%; background: #3B82F6;"></div>
+                                </div>
+                                <span class="strategy-bar-value">58%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="intervention-actions">
+                    <button class="btn-secondary" onclick="closeInterventionModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Cancel
+                    </button>
+                    <button class="btn-secondary" onclick="scheduleIntervention()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Schedule
+                    </button>
+                    <button class="btn-primary" onclick="sendIntervention()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                        Send Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="intervention.js"></script>
+</body>
+</html>
